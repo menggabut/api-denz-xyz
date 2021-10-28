@@ -2441,10 +2441,11 @@ router.get('/maker/attp', async(req, res, next) => {
 router.get('/maker/ytcommand', async(req, res, next) => {
 
  
-  if(!username) return res.json(loghandler.notusername)
-  const text2 = req.query.text2;
+  const username = req.query.username;
+  const text = req.query.text;
   const apikey = req.query.apikey;
   const url = req.query.url;
+  if(!username) return res.json(loghandler.notusername)
   if(!url) return res.json(loghandler.noturl)
   if(!text) return res.json(loghandler.nottext)
   if(!apikey) return res.json(loghandler.notparam)
