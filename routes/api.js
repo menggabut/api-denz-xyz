@@ -116,6 +116,18 @@ loghandler = {
         code: 406,
         message: 'masukan parameter angka'
     },
+    notnama: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter angka'
+    },
+    notnamagc: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter text'
+    },
     notquery: {
         status: false,
         creator: `${creator}`,
@@ -2486,27 +2498,53 @@ router.get('/maker/ytcommand', async(req, res, next) => {
 
 router.get('/maker/welcome', async(req, res, next) => {
 
- 
-  const username = req.query.username;
-  const text = req.query.text;
+  const nama = req.query.nama;
+  const namagc = req.query.namagc;
   const apikey = req.query.apikey;
   const ppgc = req.query.ppgc;
   const ppuser = req.query.ppuser;
   const bg = req.query.bg;
   const totalmem = req.query.totalmem;
-  if(!username) return res.json(loghandler.notusername)
+  if(!nama) return res.json(loghandler.notnama)
   if(!ppgc) return res.json(loghandler.notppgc)
   if(!ppuser) return res.json(loghandler.notppuser)
   if(!bg) return res.json(loghandler.notbg)
   if(!totalmem) return res.json(loghandler.nottotalmem)
-  if(!text) return res.json(loghandler.nottext)
+  if(!namagc) return res.json(loghandler.notnamagc)
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/welcomer?nama=${username}&namaGb=${text}&pepeGb=${ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
+  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/welcomer?nama=${nama}&namaGb=${namagc}&pepeGb=${ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/welcome.jpg', data)
   res.sendFile(__path +'/tmp/welcome.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/leave', async(req, res, next) => {
+
+ const nama = req.query.nama;
+  const namagc = req.query.namagc;
+  const apikey = req.query.apikey;
+  const ppgc = req.query.ppgc;
+  const ppuser = req.query.ppuser;
+  const bg = req.query.bg;
+  const totalmem = req.query.totalmem;
+  if(!nama) return res.json(loghandler.notnama)
+  if(!ppgc) return res.json(loghandler.notppgc)
+  if(!ppuser) return res.json(loghandler.notppuser)
+  if(!bg) return res.json(loghandler.notbg)
+  if(!totalmem) return res.json(loghandler.nottotalmem)
+  if(!namagc) return res.json(loghandler.notnamagc)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/leave?nama=${nama}&namaGb=${namagc}&pepeGb=&{ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/leave.jpg', data)
+  res.sendFile(__path +'/tmp/leave.jpg')
   } else {
     res.json(loghandler.invalidKey)
   }
