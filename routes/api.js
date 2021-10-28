@@ -110,6 +110,12 @@ loghandler = {
         code: 406,
         message: 'masukan parameter url'
     },
+    nottotalmem: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter angka'
+    },
     notquery: {
         status: false,
         creator: `${creator}`,
@@ -2487,15 +2493,17 @@ router.get('/maker/welcome', async(req, res, next) => {
   const ppgc = req.query.ppgc;
   const ppuser = req.query.ppuser;
   const bg = req.query.bg;
+  const totalmem = req.query.totalmem;
   if(!username) return res.json(loghandler.notusername)
   if(!ppgc) return res.json(loghandler.notppgc)
   if(!ppuser) return res.json(loghandler.notppuser)
   if(!bg) return res.json(loghandler.notbg)
+  if(!totalmem) return res.json(loghandler.nottotalmem)
   if(!text) return res.json(loghandler.nottext)
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/welcomer?nama=${username}&namaGb=${text}&pepeGb=${ppgc}&totalMem=300&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
+  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/welcomer?nama=${username}&namaGb=${text}&pepeGb=${ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/welcome.jpg', data)
   res.sendFile(__path +'/tmp/welcome.jpg')
