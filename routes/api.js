@@ -1657,6 +1657,31 @@ res.json(loghandler.invalidKey)
 }
 })
 
+router.get('/kuis/asahotak', async (req, res, next) => {
+  var apikey = req.query.apikey;
+  
+  if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+  let result = await asahotak()
+  if (result) {
+    const hasil = {
+      status: true,
+      code: 200,
+      creator: `${creator}`,
+      soal: result.soal,
+      jawaban: result.jawaban
+    }
+    res.json(hasil)
+  } else {
+    return res.status(408).json({
+      status: res.statusCode,
+      error: 'Emror'
+    })
+  }
+  } else {
+  res.json(loghandler.invalidKey)
+  }
+})
 
 router.get('/kuis/tebakGambar', async (req, res, next) => {
   var apikey = req.query.apikey;
@@ -2341,7 +2366,7 @@ router.get('/asupan', async (req, res, next) => {
     res.json(loghandler.invalidKey)
   }
 });
- 
+
 router.get("/maker/nulis", async (req, res, next) => {
   
   apikey = req.query.apikey;
@@ -2360,22 +2385,41 @@ router.get("/maker/nulis", async (req, res, next) => {
   }
 })
 
-router.get('/maker/ttp', async (req, res, next) => {
+router.get('/maker/ttp2', async(req, res, next) => {
 
-  Apikey = req.query.apikey;
-  if (!req.query.text) return res.json({ status: 404, error: 'masukkan parameter text'})
-  if(!Apikey) return res.json(loghandler.notparam)
-  if(listkey.includes(Apikey)) {
-  random = new Date
-data = await fetch(`https://api.areltiyan.site/sticker_maker?text=${encodeURIComponent(req.query.text)}`).then(v => v.json())
-         base64 = data.base64
-         var buffer = base64.slice(22)
-         await fs.writeFileSync(__path +`/tmp/ttp.png`, buffer, 'base64')
-        res.sendFile(__path+'/tmp/ttp.png')
+  const text = req.query.text;
+  const color = req.query.color;
+  const apikey = req.query.apikey;
+  if(!text) return res.json(loghandler.nottext)
+  if(!color) return res.json(loghandler.notcolor)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `http://zekais-api.herokuapp.com/text2png?text=${text}&color=${color}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/ttp2.png', data)
+  res.sendFile(__path +'/tmp/ttp2.png')
   } else {
     res.json(loghandler.invalidKey)
   }
-});
+})
+
+router.get('/maker/ttp', async(req, res, next) => {
+
+  const text = req.query.text;
+  const apikey = req.query.apikey;
+  if(!text) return res.json(loghandler.nottext)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://api.xteam.xyz/ttp?file&text=${text}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/ttp2.png', data)
+  res.sendFile(__path +'/tmp/ttp2.png')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
 
 router.get('/maker/attp', async(req, res, next) => {
 
@@ -2385,10 +2429,31 @@ router.get('/maker/attp', async(req, res, next) => {
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = 'https://alpin-api-2021.herokuapp.com/api/attp?text='+ text +'&apikey=alpin1'
+  let hasil = `https://api.xteam.xyz/attp?file&text=${text}`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/attp.gif', data)
   res.sendFile(__path +'/tmp/attp.gif')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/ytcommand', async(req, res, next) => {
+
+  const text = req.query.text;
+  const text2 = req.query.text;
+  const apikey = req.query.apikey;
+  const url = req.query.url;
+  if(!url) return res.json(loghandler.noturl)
+  if(!text) return res.json(loghandler.notusername)
+  if(!text2) return res.json(loghandler.nottext2)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://some-random-api.ml/canvas/youtube-comment?username=${text}&comment=${text2}&avatar=${url}&dark=true`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/ytcommand.jpg', data)
+  res.sendFile(__path +'/tmp/ytcommand.jpg')
   } else {
     res.json(loghandler.invalidKey)
   }
@@ -2481,6 +2546,567 @@ router.get('/web2plain-text', async(req, res, next) => {
   }
 });
 
+//NSFW
+router.get('/nsfw/ass', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/ass.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+         })
+         } else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/ahegao', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/ahegao.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/bdsm', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/bdsm.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/blowjob', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/blowjob.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/cuckold', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/cuckold.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/cum', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/cum.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/ero', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/ero.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/femdom', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/femdom.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/foot', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/foot.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/gangbang', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/gangbang.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/glasses', async (req, res, next) => {
+        
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/glasses.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/hentai', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/hentai.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+         })
+           } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/nsfw/hentaigif', async (req, res, next) => {
+        
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/hnt_gifs.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	})
+         	res.json(loghandler.error)
+} else {
+    res.json(loghandler.invalidKey)
+    }
+})
+
+router.get('/nsfw/jahy', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/jahy.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/masturbation', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/masturbation.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+    }
+})
+
+router.get('/nsfw/neko', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/nsfwNeko.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/orgy', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/orgy.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/panties', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/panties.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/pussy', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/pussy.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/thighs', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+  	
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/thighs.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/nsfw/yuri', async (req, res, next) => {
+        const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+  	
+       fetch(encodeURI(`https://raw.githubusercontent.com/jepribarus/JB-Api/main/nsfw/yuri.json`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+        var result = data[Math.floor(Math.random() * data.length)];
+             res.json({
+             	creator : `${creator}`,
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+///NSFW END
+
+router.get('/simi', async (req, res, next) => {
+   const apikey = req.query.apikey;
+            text = req.query.text
+            
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+    if (!text) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter text"})
+    
+       fetch(encodeURI(`https://api.simsimi.net/v2/?text=${text}&lc=id`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+             res.json({
+             	author: 'Iqbalzz',
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/ssweb', async (req, res, next) => {
+        
+const apikey = req.query.apikey;
+            url = req.query.url
+	
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+       fetch(encodeURI(`https://hardianto-chan.herokuapp.com/api/tools/ssweb?url=${url}&apikey=hardianto`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+             res.json({
+             	author: 'Iqbalzz',
+                 result
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+}
+})
+
+router.get('/ephoto/mobile-legends', async(req, res, next) => {
+  const apikey = req.query.apikey;
+  const text = req.query.text;
+  
+  if(!apikey) return res.json(loghandler.notparam)
+  if(!text) return res.json(loghandler.nottext)
+  
+  if(listkey.includes(apikey)){
+    zrapi 
+  .en("https://en.ephoto360.com/make-mobile-legends-wallpaper-full-hd-for-mobile-454.html", [
+    text
+  ])
+  .then((data) => {
+    res.json({
+      status: true,
+      code: 200,
+      creator: `${creator}`,
+      result: data
+    })
+  })
+  .catch((err) => console.log(err));
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+});
 
 router.get('/cekapikey', async(req, res, next) => {
   const apikey = req.query.apikey;
