@@ -2460,6 +2460,28 @@ router.get('/maker/ytcommand', async(req, res, next) => {
   }
 })
 
+router.get('/maker/welcome', async(req, res, next) => {
+
+ 
+  const username = req.query.username;
+  const text = req.query.text;
+  const apikey = req.query.apikey;
+  const url = req.query.url;
+  if(!username) return res.json(loghandler.notusername)
+  if(!url) return res.json(loghandler.noturl)
+  if(!text) return res.json(loghandler.nottext)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/welcomer?nama=${username}&namaGb=${text}&pepeGb=${url}&totalMem=300&pepeUser=${url}&bege=${url}&apikey=hardianto`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/welcome.jpg', data)
+  res.sendFile(__path +'/tmp/welcome.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
 router.get('/maker/harta-tahta', async(req, res, next) => {
   const text = req.query.text;
   const apikey = req.query.apikey;
