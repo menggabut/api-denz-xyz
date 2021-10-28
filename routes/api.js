@@ -2440,17 +2440,17 @@ router.get('/maker/attp', async(req, res, next) => {
 
 router.get('/maker/ytcommand', async(req, res, next) => {
 
-  const text = req.query.text;
-  const text2 = req.query.text;
+ 
+  if(!username) return res.json(loghandler.notusername)
+  const text2 = req.query.text2;
   const apikey = req.query.apikey;
   const url = req.query.url;
   if(!url) return res.json(loghandler.noturl)
-  if(!text) return res.json(loghandler.notusername)
-  if(!text2) return res.json(loghandler.nottext2)
+  if(!text) return res.json(loghandler.nottext)
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = `https://some-random-api.ml/canvas/youtube-comment?username=${text}&comment=${text2}&avatar=${url}&dark=true`
+  let hasil = `https://some-random-api.ml/canvas/youtube-comment?username=${username}&comment=${text}&avatar=${url}&dark=true`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/ytcommand.jpg', data)
   res.sendFile(__path +'/tmp/ytcommand.jpg')
