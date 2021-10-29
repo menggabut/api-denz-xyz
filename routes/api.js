@@ -2504,6 +2504,63 @@ router.get('/maker/attp', async(req, res, next) => {
   }
 })
 
+router.get('/maker/pet', async(req, res, next) => {
+
+  const url = req.query.url;
+  const apikey = req.query.apikey;
+  if(!url) return res.json(loghandler.noturl)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://hardianto-chan.herokuapp.com/api/pet?url=${url}&apikey=hardianto`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/pet.jpg', data)
+  res.sendFile(__path +'/tmp/pet.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/calender', async(req, res, next) => {
+
+  const url = req.query.url;
+  const apikey = req.query.apikey;
+  if(!url) return res.json(loghandler.noturl)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://api.zeks.me/api/calender?apikey=apivinz&image=${url}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/calender.jpg', data)
+  res.sendFile(__path +'/tmp/calender.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/missing', async(req, res, next) => {
+
+  const text = req.query.text;
+  const text2 = req.query.text2;
+  const text3 = req.query.text3;
+  const url = req.query.url;
+  const apikey = req.query.apikey;
+  if(!text) return res.json(loghandler.nottext)
+  if(!text2) return res.json(loghandler.nottext2)
+  if(!text3) return res.json(loghandler.nottext3)
+  if(!url) return res.json(loghandler.noturl)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://api.zeks.me/api/missing-image?apikey=apivinz&image=${url}&text=${text}&text2=${text2}&text3=${text3}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/missing.jpg', data)
+  res.sendFile(__path +'/tmp/missing.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
 router.get('/maker/barcode', async(req, res, next) => {
 
   const text = req.query.text;
