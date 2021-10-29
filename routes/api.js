@@ -120,7 +120,7 @@ loghandler = {
         status: false,
         creator: `${creator}`,
         code: 406,
-        message: 'masukan parameter angka'
+        message: 'masukan parameter text'
     },
     notnamagc: {
         status: false,
