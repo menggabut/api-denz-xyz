@@ -146,6 +146,18 @@ loghandler = {
         code: 406,
         message: 'masukan parameter text'
     },
+    notkelas: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter text'
+    },
+    nottinta: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter angka'
+    },
     notquery: {
         status: false,
         creator: `${creator}`,
@@ -2487,6 +2499,46 @@ router.get('/maker/attp', async(req, res, next) => {
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/attp.gif', data)
   res.sendFile(__path +'/tmp/attp.gif')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/barcode', async(req, res, next) => {
+
+  const text = req.query.text;
+  const apikey = req.query.apikey;
+  if(!text) return res.json(loghandler.nottext)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://api.zeks.me/api/barcode?apikey=apivinz&text=${text}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/barcode.jpg', data)
+  res.sendFile(__path +'/tmp/barcode.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/magernulis', async(req, res, next) => {
+
+  const nama = req.query.nama;
+  const kelas = req.query.kelas;
+  const apikey = req.query.apikey;
+  const text = req.query.text;
+  const tinta = req.query.tinta;
+  if(!nama) return res.json(loghandler.notnama)
+  if(!kelas) return res.json(loghandler.notkelas)
+  if(!text) return res.json(loghandler.nottext)
+  if(!tinta) return res.json(loghandler.nottinta)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://api.zeks.me/api/magernulis?apikey=apivinz&nama=${nama}&kelas=${kelas}&text=${text}&tinta=${tinta}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/magernulis.jpg', data)
+  res.sendFile(__path +'/tmp/magernulis.jpg')
   } else {
     res.json(loghandler.invalidKey)
   }
