@@ -134,6 +134,18 @@ loghandler = {
         code: 406,
         message: 'masukan parameter color'
     },
+    notcomment: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter text'
+    },
+    notdisplayname: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter text'
+    },
     notquery: {
         status: false,
         creator: `${creator}`,
@@ -2480,20 +2492,63 @@ router.get('/maker/attp', async(req, res, next) => {
   }
 })
 
-router.get('/maker/ytcommand', async(req, res, next) => {
+router.get('/maker/phub', async(req, res, next) => {
 
- 
   const username = req.query.username;
-  const text = req.query.text;
+  const comment = req.query.comment;
   const apikey = req.query.apikey;
   const url = req.query.url;
   if(!username) return res.json(loghandler.notusername)
   if(!url) return res.json(loghandler.noturl)
-  if(!text) return res.json(loghandler.nottext)
+  if(!comment) return res.json(loghandler.notcomment)
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = `https://some-random-api.ml/canvas/youtube-comment?username=${username}&comment=${text}&avatar=${url}&dark=true`
+  let hasil = `https://api.zeks.me/api/phub?apikey=apivinz&img=${url}&username=${username}&msg=${comment}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/phub.jpg', data)
+  res.sendFile(__path +'/tmp/phub.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/tweet', async(req, res, next) => {
+
+  const username = req.query.username;
+  const comment = req.query.comment;
+  const apikey = req.query.apikey;
+  const url = req.query.url;
+  const displayname = req.query.displayname;
+  if(!username) return res.json(loghandler.notusername)
+  if(!url) return res.json(loghandler.noturl)
+  if(!comment) return res.json(loghandler.notcomment)
+  if(!displayname) return res.json(loghandler.notdisplayname)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://some-random-api.ml/canvas/tweet?avatar=${url}&comment=${comment}&displayname=${displayname}&username=${username}`
+  data = await fetch(hasil).then(v => v.buffer())
+  await fs.writeFileSync(__path +'/tmp/tweet.jpg', data)
+  res.sendFile(__path +'/tmp/tweet.jpg')
+  } else {
+    res.json(loghandler.invalidKey)
+  }
+})
+
+router.get('/maker/ytcommand', async(req, res, next) => {
+
+  const username = req.query.username;
+  const comment = req.query.comment;
+  const apikey = req.query.apikey;
+  const url = req.query.url;
+  if(!username) return res.json(loghandler.notusername)
+  if(!url) return res.json(loghandler.noturl)
+  if(!comment) return res.json(loghandler.notcomment)
+  if(!apikey) return res.json(loghandler.notparam)
+  
+  if(listkey.includes(apikey)) {
+  let hasil = `https://some-random-api.ml/canvas/youtube-comment?username=${username}&comment=${comment}&avatar=${url}&dark=true`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/ytcommand.jpg', data)
   res.sendFile(__path +'/tmp/ytcommand.jpg')
@@ -2531,14 +2586,14 @@ router.get('/maker/welcome', async(req, res, next) => {
 
 router.get('/maker/leave', async(req, res, next) => {
 
- const nama = req.query.nama;
+  const username = req.query.username;
   const namagc = req.query.namagc;
   const apikey = req.query.apikey;
   const ppgc = req.query.ppgc;
   const ppuser = req.query.ppuser;
   const bg = req.query.bg;
   const totalmem = req.query.totalmem;
-  if(!nama) return res.json(loghandler.notnama)
+  if(!username) return res.json(loghandler.notusername)
   if(!ppgc) return res.json(loghandler.notppgc)
   if(!ppuser) return res.json(loghandler.notppuser)
   if(!bg) return res.json(loghandler.notbg)
@@ -2547,7 +2602,7 @@ router.get('/maker/leave', async(req, res, next) => {
   if(!apikey) return res.json(loghandler.notparam)
   
   if(listkey.includes(apikey)) {
-  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/leave?nama=${nama}&namaGb=${namagc}&pepeGb=&{ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
+  let hasil = `https://hardianto-chan.herokuapp.com/api/tools/leave?nama=${username}&namaGb=${namagc}&pepeGb=&{ppgc}&totalMem=${totalmem}&pepeUser=${ppuser}&bege=${bg}&apikey=hardianto`
   data = await fetch(hasil).then(v => v.buffer())
   await fs.writeFileSync(__path +'/tmp/leave.jpg', data)
   res.sendFile(__path +'/tmp/leave.jpg')
