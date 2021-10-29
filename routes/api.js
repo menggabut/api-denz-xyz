@@ -128,6 +128,12 @@ loghandler = {
         code: 406,
         message: 'masukan parameter text'
     },
+    notcolor: {
+        status: false,
+        creator: `${creator}`,
+        code: 406,
+        message: 'masukan parameter color'
+    },
     notquery: {
         status: false,
         creator: `${creator}`,
