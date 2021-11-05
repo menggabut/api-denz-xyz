@@ -2720,6 +2720,30 @@ router.get('/maker/leave', async(req, res, next) => {
   }
 })
 
+router.get('/maker/welcome2', async (req, res, next) => {
+if (!req.query.name) return res.json({ status: 404, error: 'masukkan param name'})
+if (!req.query.mem) return res.json({ status: 404, error: 'masukkan param mem'})
+if (!req.query.gcname) return res.json({ status: 404, error: 'masukkan param gcname'})
+if (!req.query.picurl) return res.json({ status: 404, error: 'masukkan param picurl'})
+var canvas = require('discord-canvas')
+const welcomer = await new canvas.Welcome()
+                    .setUsername(req.query.name)
+                    .setDiscriminator(req.query.mem)
+                    .setMemberCount(req.query.mem)
+                    .setGuildName(req.query.gcname)
+                    .setAvatar(req.query.picurl)
+                    .setColor('border', '#00100C')
+                    .setColor('username-box', '#00100C')
+                    .setColor('discriminator-box', '#00100C')
+                    .setColor('message-box', '#00100C')
+                    .setColor('title', '#00FFFF')
+                    .setBackground('https://images.unsplash.com/photo-1493514789931-586cb221d7a7?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb')
+                    .toAttachment()
+                const base64 = `${welcomer.toBuffer().toString('base64')}`
+        require('fs').writeFileSync('welkom.png', base64, 'base64')
+      res.sendFile(__path+'/welkom.png')
+})
+
 router.get('/maker/harta-tahta', async(req, res, next) => {
   const text = req.query.text;
   const apikey = req.query.apikey;
