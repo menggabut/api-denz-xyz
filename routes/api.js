@@ -3367,6 +3367,53 @@ const apikey = req.query.apikey;
 }
 })
 
+router.get('/math', async (req, res, next) => {
+	const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+	    mode = req.query.mode;
+  if (!mode) return res.json({ message : `Silahkan masukan modenya,, Mode tersedia : 1. very_easy, 2. easy, 3. medium, 4. hard, 5. extreme, 6. impossible` })  
+     var json = await (await fetch(`http://zekais-api.herokuapp.com/math?mode=${mode}`)).json()
+
+     res.json({
+	     status : true,
+	     creator : creator,
+	     info : json.message,
+	     soal : json.soal,
+	     jawaban : json.jawaban,
+	     poin : 25000
+       })
+.catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+   }
+})
+
+router.get('/math2', async (req, res, next) => {
+const apikey = req.query.apikey;
+        if(!apikey) return res.json(loghandler.notparam)
+  if(listkey.includes(apikey)){
+
+     var json = await (await fetch(`https://salism3api.pythonanywhere.com/math`)).json()
+
+     res.json({
+	     status : true,
+	     creator : creator,
+	     soal : json.image,
+	     jawaban : json.answer,
+	     poin : 50000
+       })
+.catch(e => {
+         	res.json(loghandler.error)
+})
+} else {
+    res.json(loghandler.invalidKey)
+   }
+})
+
+
 router.get('/ephoto/mobile-legends', async(req, res, next) => {
   const apikey = req.query.apikey;
   const text = req.query.text;
